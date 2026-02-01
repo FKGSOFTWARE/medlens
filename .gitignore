@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models (large files)
+models/
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.onnx
+
+# HuggingFace cache
+.cache/
+
+# Data (may contain clinical images)
+data/*
+!data/.gitkeep
+
+# Environment
+.env
+.env.local
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Ralph state (auto-generated, not config)
+.ralph/state.json
+.ralph/metrics.json
+.ralph/traces/
+.ralph/benchmarks/
+.ralph/patterns/
+.ralph/checkpoints/
+.ralph/zones/

@@ -1,0 +1,218 @@
+{
+  "_version": "2.0",
+  "_description": "Opti-Ralph v2 configuration",
+  "project": "medlens",
+  "scale_thresholds": {
+    "simple_max_files": 3,
+    "medium_max_files": 15,
+    "simple_max_tasks": 3,
+    "medium_max_tasks": 10
+  },
+  "checkpoint_triggers": {
+    "uncertainty_threshold": 0.7,
+    "files_changed_threshold": 5,
+    "task_count_threshold": 5,
+    "risk_keywords": [
+      "auth",
+      "payment",
+      "migration",
+      "delete",
+      "security",
+      "model",
+      "medical",
+      "patient",
+      "inference",
+      "quantization"
+    ]
+  },
+  "mode": "standard",
+  "model": {
+    "lead": "sonnet",
+    "zone": "sonnet",
+    "scout": "haiku"
+  },
+  "timeouts": {
+    "understand": 300,
+    "plan": 180,
+    "execute": 600,
+    "scout": 120,
+    "zone": 300,
+    "assess": 60
+  },
+  "reflection": {
+    "enabled": true,
+    "auto_reflect_on_failure": true,
+    "min_iterations_before_reflect": 2
+  },
+  "cache": {
+    "enabled": true,
+    "min_tokens": 1024,
+    "contexts": [
+      "CLAUDE.md",
+      "spec.md",
+      "learnings.md"
+    ]
+  },
+  "context_compression": {
+    "enabled": true,
+    "max_context_tokens": 50000,
+    "compression_ratio": 0.6
+  },
+  "skills": {
+    "enabled": true,
+    "discovery_paths": [
+      "templates/skills"
+    ]
+  },
+  "learnings": {
+    "enabled": true,
+    "max_patterns": 50,
+    "top_n_hints": 5
+  },
+  "autonomy": {
+    "enabled": true,
+    "self_correction": {
+      "enabled": true,
+      "max_attempts": 3,
+      "strategies": {
+        "syntax": "reread_and_fix",
+        "test_failure": "analyze_and_adjust",
+        "type_error": "check_types_and_fix",
+        "runtime": "add_debug_and_retry"
+      }
+    },
+    "ambiguity_detection": {
+      "enabled": true,
+      "auto_ask_threshold": 0.7,
+      "store_clarifications": true
+    },
+    "adaptive_checkpoints": {
+      "enabled": true,
+      "base_threshold": 0.5,
+      "weights": {
+        "novelty": 0.25,
+        "past_success": 0.25,
+        "uncertainty": 0.2,
+        "scope_change": 0.15,
+        "time_elapsed": 0.15
+      },
+      "mode_thresholds": {
+        "sprint": 0.8,
+        "standard": 0.5,
+        "careful": 0.3
+      },
+      "pattern_adjustments": {
+        "routine": 0.2,
+        "novel": -0.2,
+        "risky": -0.3,
+        "refactor": -0.1
+      }
+    },
+    "session_memory": {
+      "enabled": true,
+      "max_age_days": 30,
+      "familiarity_decay_per_week": 0.1
+    },
+    "scope_negotiation": {
+      "enabled": true,
+      "auto_defer_threshold": 3,
+      "require_approval": true
+    },
+    "confidence_calibration": {
+      "enabled": true,
+      "min_predictions_for_adjustment": 10,
+      "max_threshold_adjustment": 0.15
+    }
+  },
+  "metrics": {
+    "enabled": true,
+    "session_tracking": true,
+    "token_estimation": true,
+    "anomaly_detection": {
+      "enabled": true,
+      "failure_rate_threshold": 0.5,
+      "iteration_spike_factor": 3.0
+    }
+  },
+  "cost": {
+    "enabled": true,
+    "session_budget": 15.0,
+    "project_budget": 200.0,
+    "alert_threshold": 0.8,
+    "budget_action": "warn"
+  },
+  "verification": {
+    "enabled": true,
+    "checks": {
+      "tests": {
+        "enabled": true,
+        "blocking": true,
+        "timeout_seconds": 300
+      },
+      "linter": {
+        "enabled": true,
+        "blocking": false,
+        "timeout_seconds": 120
+      },
+      "typecheck": {
+        "enabled": true,
+        "blocking": false,
+        "timeout_seconds": 120
+      },
+      "security": {
+        "enabled": false,
+        "blocking": true,
+        "timeout_seconds": 60
+      }
+    }
+  },
+  "self_improvement": {
+    "enabled": true,
+    "trace_collection": true,
+    "pattern_injection": true,
+    "max_traces_per_day": 100,
+    "trace_retention_days": 90,
+    "min_quality_score": 5,
+    "injection_max_tokens": 2000,
+    "injection_max_examples": 3,
+    "global_patterns": false,
+    "ab_testing": false
+  },
+  "lats": {
+    "enabled": false,
+    "auto_trigger": true,
+    "complexity_threshold": 0.7,
+    "exploration_constant": 1.41,
+    "max_iterations": 10,
+    "max_depth": 5,
+    "branching_factor": 3,
+    "early_termination_threshold": 0.95,
+    "parallel_evaluations": 3,
+    "snapshot_strategy": "git"
+  },
+  "optimization": {
+    "enabled": true,
+    "use_optimized_prompts": true,
+    "techniques": {
+      "paraphrase": 1.0,
+      "restructure": 0.8,
+      "elaborate": 0.6,
+      "compress": 0.6,
+      "tone_shift": 0.4,
+      "few_shot": 0.5
+    },
+    "scoring_weights": {
+      "correctness": 0.4,
+      "completeness": 0.25,
+      "quality": 0.2,
+      "efficiency": 0.15
+    },
+    "settings": {
+      "max_iterations": 5,
+      "variation_count": 8,
+      "top_k": 3,
+      "convergence_threshold": 0.02,
+      "parallel_evaluations": 4
+    }
+  }
+}

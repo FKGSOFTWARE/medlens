@@ -1,0 +1,33 @@
+# MedLens Model Configuration
+# MedGemma 4B multimodal with 4-bit quantization
+
+model:
+  model_id: "google/medgemma-4b-it"
+  quantization_bits: 4
+  max_new_tokens: 1024
+  temperature: 0.3
+  top_p: 0.9
+  device_map: "auto"
+  torch_dtype: "float16"
+  trust_remote_code: true
+
+# Generation parameters per agent
+agents:
+  visual:
+    max_new_tokens: 768
+    temperature: 0.2
+    # Lower temperature for factual observations
+  reasoning:
+    max_new_tokens: 1024
+    temperature: 0.3
+    # Moderate temperature for clinical reasoning
+  report:
+    max_new_tokens: 768
+    temperature: 0.4
+    # Slightly higher for natural language generation
+
+# Hardware constraints
+hardware:
+  min_vram_gb: 12
+  target_gpu: "RTX 4070 Ti Super"
+  target_vram_gb: 16

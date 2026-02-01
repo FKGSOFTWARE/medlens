@@ -1,0 +1,57 @@
+{
+  "tests": {
+    "file_hash": "-3878510137443945857",
+    "timestamp": 1769946178.7568047,
+    "ttl_seconds": 3600,
+    "result": {
+      "check_name": "tests",
+      "passed": true,
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.10.12, pytest-7.4.0, pluggy-1.5.0 -- /usr/bin/python3\ncachedir: .pytest_cache\nrootdir: /home/goose/medlens\nconfigfile: pyproject.toml\ntestpaths: tests\nplugins: anyio-4.10.0\ncollecting ... collected 9 items\n\ntests/test_agents.py::TestDataStructures::test_visual_findings_defaults PASSED [ 11%]\ntests/test_agents.py::TestDataStructures::test_visual_findings_populated PASSED [ 22%]\ntests/test_agents.py::TestDataStructures::test_patient_context_defaults PASSED [ 33%]\ntests/test_agents.py::TestDataStructures::test_clinical_assessment_soap_note PASSED [ 44%]\ntests/test_agents.py::TestDataStructures::test_patient_report_has_disclaimer PASSED [ 55%]\ntests/test_agents.py::TestDataStructures::test_patient_report_questions_default PASSED [ 66%]\ntests/test_agents.py::TestFleschKincaid::test_simple_text PASSED         [ 77%]\ntests/test_agents.py::TestFleschKincaid::test_complex_text PASSED        [ 88%]\ntests/test_agents.py::TestFleschKincaid::test_empty_text PASSED          [100%]\n\n============================== 9 passed in 0.01s ===============================\n",
+      "duration_ms": 178,
+      "exit_code": 0,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "linter": {
+    "file_hash": "-3878510137443945857",
+    "timestamp": 1769946178.7602286,
+    "ttl_seconds": 3600,
+    "result": {
+      "check_name": "linter",
+      "passed": false,
+      "output": "F401 [*] `pytest` imported but unused\n  --> tests/test_agents.py:10:8\n   |\n 8 | from __future__ import annotations\n 9 |\n10 | import pytest\n   |        ^^^^^^\n11 |\n12 | from medlens.agents.visual import VisualFindings\n   |\nhelp: Remove unused import: `pytest`\n\nFound 1 error.\n[*] 1 fixable with the `--fix` option.\n",
+      "duration_ms": 890,
+      "exit_code": 1,
+      "errors": [
+        "--> tests/test_agents.py:10:8"
+      ],
+      "warnings": []
+    }
+  },
+  "typecheck": {
+    "file_hash": "-3878510137443945857",
+    "timestamp": 1769946178.7630882,
+    "ttl_seconds": 3600,
+    "result": {
+      "check_name": "typecheck",
+      "passed": false,
+      "output": "src/medlens/model.py:63: error: Module \"transformers\" has no attribute \"BitsAndBytesConfig\"  [attr-defined]\nsrc/medlens/model.py:128: error: Dict entry 1 has incompatible type \"str\": \"list[object]\"; expected \"str\": \"str\"  [dict-item]\nsrc/medlens/model.py:134: error: \"None\" has no attribute \"apply_chat_template\"  [attr-defined]\nsrc/medlens/model.py:137: error: \"None\" not callable  [misc]\nsrc/medlens/model.py:139: error: \"None\" has no attribute \"device\"  [attr-defined]\nsrc/medlens/model.py:144: error: \"None\" has no attribute \"generate\"  [attr-defined]\nsrc/medlens/model.py:149: error: \"None\" has no attribute \"decode\"  [attr-defined]\nsrc/medlens/model.py:176: error: \"None\" has no attribute \"apply_chat_template\"  [attr-defined]\nsrc/medlens/model.py:179: error: \"None\" not callable  [misc]\nsrc/medlens/model.py:181: error: \"None\" has no attribute \"device\"  [attr-defined]\nsrc/medlens/model.py:186: error: \"None\" has no attribute \"generate\"  [attr-defined]\nsrc/medlens/model.py:190: error: \"None\" has no attribute \"decode\"  [attr-defined]\nsrc/medlens/agents/report.py:30: error: Incompatible types in assignment (expression has type \"None\", variable has type \"list[str]\")  [assignment]\nFound 13 errors in 2 files (checked 10 source files)\n",
+      "duration_ms": 28809,
+      "exit_code": 1,
+      "errors": [
+        "src/medlens/model.py:63: error: Module \"transformers\" has no attribute \"BitsAndBytesConfig\"  [attr-defined]",
+        "src/medlens/model.py:128: error: Dict entry 1 has incompatible type \"str\": \"list[object]\"; expected \"str\": \"str\"  [dict-item]",
+        "src/medlens/model.py:134: error: \"None\" has no attribute \"apply_chat_template\"  [attr-defined]",
+        "src/medlens/model.py:137: error: \"None\" not callable  [misc]",
+        "src/medlens/model.py:139: error: \"None\" has no attribute \"device\"  [attr-defined]",
+        "src/medlens/model.py:144: error: \"None\" has no attribute \"generate\"  [attr-defined]",
+        "src/medlens/model.py:149: error: \"None\" has no attribute \"decode\"  [attr-defined]",
+        "src/medlens/model.py:176: error: \"None\" has no attribute \"apply_chat_template\"  [attr-defined]",
+        "src/medlens/model.py:179: error: \"None\" not callable  [misc]",
+        "src/medlens/model.py:181: error: \"None\" has no attribute \"device\"  [attr-defined]"
+      ],
+      "warnings": []
+    }
+  }
+}

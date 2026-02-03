@@ -57,7 +57,7 @@ Each agent is a class with a typed `run()` method. A single MedGemma model insta
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-org>/medlens.git
+git clone https://github.com/FKGSOFTWARE/medlens.git
 cd medlens
 
 # Run environment setup (validates Python, CUDA, installs deps)

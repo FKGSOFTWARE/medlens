@@ -57,7 +57,7 @@ MedLens implements a **3-agent agentic pipeline** using MedGemma 4B multimodal â
 
 **Testing:** 39 unit tests covering all agents, parsing logic, data structures, prompt building, confidence/urgency normalization, Flesch-Kincaid computation, and edge cases (empty output, unstructured fallback).
 
-**Source code:** [github.com/your-org/medlens](https://github.com/your-org/medlens)
+**Source code:** [github.com/FKGSOFTWARE/medlens](https://github.com/FKGSOFTWARE/medlens)
 **Video demo:** [link]
 
 ---

@@ -14,8 +14,8 @@
 ```bash
 cd ~/medlens
 
-# Add remote (replace YOUR_USERNAME)
-git remote add origin https://github.com/YOUR_USERNAME/medlens.git
+# Add remote (replace FKGSOFTWARE)
+git remote add origin https://github.com/FKGSOFTWARE/medlens.git
 
 # Push
 git branch -M main

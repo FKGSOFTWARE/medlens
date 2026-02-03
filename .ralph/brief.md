@@ -15,7 +15,7 @@ to the MedGemma Impact Challenge (deadline: Feb 24, 2026).
 - [x] Streamlit app: Upload image + enter notes → see agent chain → get outputs
 - [~] Latency < 30s total for full 3-agent pipeline — needs GPU test (estimated ~16s)
 - [x] Patient report scores Flesch-Kincaid grade level 6-8 — FK computation implemented
-- [ ] All code in public GitHub repo — see docs/github_setup.md
+- [x] All code in public GitHub repo — https://github.com/FKGSOFTWARE/medlens
 - [ ] 3-minute demo video recorded — see docs/demo_script.md
 - [x] 3-page writeup completed per competition template — see docs/writeup_template.md
 - [ ] Submitted to Kaggle as Writeup before Feb 24 11:59 PM UTC

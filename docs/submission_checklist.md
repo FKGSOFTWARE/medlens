@@ -13,9 +13,9 @@
 - [ ] **GPU integration test** — run full pipeline on RTX 4070 Ti Super
 
 ### Repository
-- [ ] Create public GitHub repo
-- [ ] Push all code
-- [ ] Update repo links in writeup and README
+- [x] Create public GitHub repo — https://github.com/FKGSOFTWARE/medlens
+- [x] Push all code
+- [x] Update repo links in writeup and README
 - [ ] Verify README renders correctly
 
 ### Demo Video (max 3 minutes)
@@ -34,7 +34,7 @@
 - [x] Performance metrics table
 - [x] Deployment challenges and mitigations
 - [ ] Update video link
-- [ ] Update GitHub link
+- [x] Update GitHub link — https://github.com/FKGSOFTWARE/medlens
 - [ ] Final proofread
 
 ## Kaggle Submission

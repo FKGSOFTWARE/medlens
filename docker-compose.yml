@@ -1,0 +1,18 @@
+services:
+  medlens:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - "${HF_HOME:-~/.cache/huggingface}:/root/.cache/huggingface"
+      - "./configs:/app/configs"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - HF_HOME=/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

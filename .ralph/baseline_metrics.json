@@ -1,0 +1,79 @@
+{
+  "version": "1.0.0",
+  "baselines": {},
+  "history": {
+    "tasks_per_session": [
+      {
+        "value": 4,
+        "timestamp": "2026-02-01T12:12:00.772106",
+        "session_id": "6c96c5cd",
+        "context": {
+          "scale": "complex",
+          "mode": "standard"
+        }
+      }
+    ],
+    "iterations_per_task": [
+      {
+        "value": 1.0,
+        "timestamp": "2026-02-01T12:12:00.772106",
+        "session_id": "6c96c5cd",
+        "context": {
+          "scale": "complex",
+          "mode": "standard"
+        }
+      }
+    ],
+    "failure_rate": [
+      {
+        "value": 0.0,
+        "timestamp": "2026-02-01T12:12:00.772106",
+        "session_id": "6c96c5cd",
+        "context": {
+          "scale": "complex",
+          "mode": "standard"
+        }
+      }
+    ],
+    "time_per_task": [],
+    "checkpoint_frequency": [
+      {
+        "value": 0,
+        "timestamp": "2026-02-01T12:12:00.772106",
+        "session_id": "6c96c5cd",
+        "context": {
+          "scale": "complex",
+          "mode": "standard"
+        }
+      }
+    ],
+    "session_duration": [
+      {
+        "value": 1e-05,
+        "timestamp": "2026-02-01T12:12:00.772106",
+        "session_id": "6c96c5cd",
+        "context": {
+          "scale": "complex",
+          "mode": "standard"
+        }
+      }
+    ]
+  },
+  "sessions": [
+    {
+      "session_id": "6c96c5cd",
+      "started_at": "2026-02-01T12:12:00.772083",
+      "ended_at": "2026-02-01T12:12:00.772093",
+      "scale": "complex",
+      "mode": "standard",
+      "tasks_attempted": 4,
+      "tasks_completed": 4,
+      "tasks_failed": 0,
+      "total_iterations": 4,
+      "estimated_tokens": 0,
+      "checkpoint_count": 0,
+      "task_timings": []
+    }
+  ],
+  "anomalies": []
+}

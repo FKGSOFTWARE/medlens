@@ -10,13 +10,18 @@ Output: VisualFindings dataclass with structured observations
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from medlens.agents.parsing import extract_list, extract_section, parse_confidence
 
 if TYPE_CHECKING:
     from PIL import Image
 
     from medlens.model import MedGemmaModel
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -52,6 +57,25 @@ class VisualAnalysisAgent:
         "Be thorough but factual. Do not diagnose — only describe what you observe."
     )
 
+    USER_PROMPT_TEMPLATE = (
+        "Analyze this clinical image and provide your findings in the following "
+        "structured format. Use exactly these section headers:\n\n"
+        "DESCRIPTION: <one paragraph overall description>\n"
+        "MORPHOLOGY: <comma-separated list of morphological features>\n"
+        "ANATOMICAL LOCATION: <body location>\n"
+        "SEVERITY: <mild, moderate, or severe>\n"
+        "COLOR DESCRIPTORS: <comma-separated list of colors observed>\n"
+        "SIZE ESTIMATE: <estimated size or extent>\n"
+        "BORDER CHARACTERISTICS: <description of borders/margins>\n"
+        "ADDITIONAL OBSERVATIONS: <comma-separated list of other notable findings>\n"
+        "CONFIDENCE: <high, moderate, or low>\n"
+        "{context}"
+    )
+
+    # Agent-specific generation config (from model_config.yaml agents.visual)
+    MAX_NEW_TOKENS = 768
+    TEMPERATURE = 0.2
+
     def __init__(self, model: MedGemmaModel) -> None:
         self.model = model
 
@@ -65,4 +89,56 @@ class VisualAnalysisAgent:
         Returns:
             VisualFindings with structured observations.
         """
-        raise NotImplementedError("Visual analysis agent not yet implemented")
+        prompt = self._build_prompt(clinical_context)
+
+        logger.info("Running visual analysis agent")
+        raw_output = self.model.generate_multimodal(
+            image=image,
+            prompt=prompt,
+            system_prompt=self.SYSTEM_PROMPT,
+            max_new_tokens=self.MAX_NEW_TOKENS,
+            temperature=self.TEMPERATURE,
+        )
+        logger.debug("Visual agent raw output: %s", raw_output)
+
+        return self._parse_output(raw_output)
+
+    def _build_prompt(self, clinical_context: str) -> str:
+        """Build the user prompt, optionally including clinical context."""
+        context_line = ""
+        if clinical_context.strip():
+            context_line = f"\nClinical context: {clinical_context.strip()}"
+        return self.USER_PROMPT_TEMPLATE.format(context=context_line)
+
+    @staticmethod
+    def _parse_output(raw_output: str) -> VisualFindings:
+        """Parse LLM output into structured VisualFindings.
+
+        Uses section-header regex matching with fallback to treating the
+        entire output as a description if structured parsing fails.
+        """
+        findings = VisualFindings(raw_output=raw_output)
+
+        findings.description = extract_section(raw_output, "DESCRIPTION")
+        findings.morphology = extract_list(raw_output, "MORPHOLOGY")
+        findings.anatomical_location = extract_section(
+            raw_output, "ANATOMICAL LOCATION"
+        )
+        findings.severity = extract_section(raw_output, "SEVERITY").lower()
+        findings.color_descriptors = extract_list(raw_output, "COLOR DESCRIPTORS")
+        findings.size_estimate = extract_section(raw_output, "SIZE ESTIMATE")
+        findings.border_characteristics = extract_section(
+            raw_output, "BORDER CHARACTERISTICS"
+        )
+        findings.additional_observations = extract_list(
+            raw_output, "ADDITIONAL OBSERVATIONS"
+        )
+        findings.confidence = parse_confidence(
+            extract_section(raw_output, "CONFIDENCE")
+        )
+
+        # Fallback: if no structured sections were parsed, use full output as description
+        if not findings.description and raw_output.strip():
+            findings.description = raw_output.strip()
+
+        return findings

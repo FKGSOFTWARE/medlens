@@ -1,0 +1,66 @@
+{
+  "case": "Suspicious pigmented lesion — left forearm",
+  "patient_context": {
+    "age": "52",
+    "sex": "Male",
+    "chief_complaint": "Changing mole on left forearm",
+    "history_of_present_illness": "Patient noticed a dark spot on left forearm approximately 6 months ago. Reports the lesion has grown in size and changed color over the past 2 months. No pain, itching, or bleeding. No prior history of skin cancer.",
+    "past_medical_history": "Hypertension, type 2 diabetes",
+    "medications": "Metformin 1000mg BID, Lisinopril 20mg daily",
+    "allergies": "None known"
+  },
+  "agent_1_visual_findings": {
+    "description": "Asymmetric pigmented lesion on the dorsal surface of the left forearm. The lesion demonstrates irregular borders with notching and color variegation including shades of dark brown, light brown, and focal areas of blue-black pigmentation. The surface appears slightly raised centrally with a flat peripheral component.",
+    "morphology": ["asymmetric macule-papule", "irregular shape", "color variegation", "raised center"],
+    "anatomical_location": "left forearm, dorsal surface",
+    "severity": "moderate",
+    "color_descriptors": ["dark brown", "light brown", "blue-black", "tan"],
+    "size_estimate": "approximately 8mm x 6mm",
+    "border_characteristics": "irregular, notched borders with poorly defined margins at 3 o'clock and 9 o'clock positions",
+    "additional_observations": ["no ulceration", "no satellite lesions", "slight asymmetry along both axes", "regression area at 12 o'clock"],
+    "confidence": 0.9
+  },
+  "agent_2_clinical_assessment": {
+    "subjective": "52-year-old male presents with a 6-month history of a changing pigmented lesion on the left forearm. The lesion has progressively enlarged and changed color over the past 2 months. Denies pain, pruritus, or bleeding. No personal or family history of melanoma. PMH significant for hypertension and type 2 diabetes.",
+    "objective": "Visual analysis reveals an 8mm x 6mm asymmetric pigmented lesion on the dorsal left forearm. ABCDE criteria assessment: Asymmetry present (both axes), Border irregularity with notching, Color variegation (dark brown, light brown, blue-black), Diameter >6mm, Evolution reported by patient. No ulceration or satellite lesions. Possible regression zone noted.",
+    "assessment": "Atypical melanocytic lesion with multiple concerning features per ABCDE criteria. The combination of asymmetry, border irregularity, color variegation including blue-black pigment, size >6mm, and documented evolution over 6 months raises concern for dysplastic nevus versus early melanoma. The blue-black pigmentation and regression zone are particularly concerning features.",
+    "plan": "1. Urgent referral to dermatology within 1-2 weeks. 2. Dermoscopic evaluation recommended. 3. If dermoscopy confirms atypical features, excisional biopsy with 2mm margins for histopathologic analysis. 4. Full-body skin examination to assess for additional atypical lesions. 5. Patient education on sun protection and monthly self-skin examination using ABCDE criteria. 6. Photography for documentation and comparison at follow-up.",
+    "differential_diagnosis": [
+      "dysplastic nevus",
+      "melanoma (superficial spreading type)",
+      "seborrheic keratosis",
+      "pigmented basal cell carcinoma",
+      "lentigo maligna"
+    ],
+    "recommended_workup": [
+      "dermoscopy",
+      "excisional biopsy with histopathology",
+      "full-body skin examination",
+      "baseline photography"
+    ],
+    "urgency": "urgent",
+    "confidence": 0.9
+  },
+  "agent_3_patient_report": {
+    "summary": "We looked at a spot on your left arm that you mentioned has been changing. It has some features that your doctor should examine more closely to make sure it is not something that needs treatment.",
+    "what_we_found": "There is a dark spot on your left forearm that is about the size of a pencil eraser (8mm). The spot has uneven edges and several different colors, including dark brown and some darker areas. It is slightly raised in the center. These features are checked using a system doctors call ABCDE: the spot is not the same on both sides (Asymmetry), has uneven edges (Border), has multiple colors (Color), is bigger than 6mm (Diameter), and has been changing (Evolution).",
+    "what_it_might_mean": "A spot with these features could be a type of mole that is changing. Most changing moles turn out to be harmless, but some need to be checked more carefully by a skin specialist. The different colors and uneven shape mean it is worth getting a closer look to be safe.",
+    "next_steps": "You should see a skin doctor (called a dermatologist) within the next 1-2 weeks. They will likely use a special magnifying tool to look at the spot more closely. They may suggest removing it with a small procedure to test it under a microscope. In the meantime, protect the area from sun exposure and avoid scratching or irritating it.",
+    "questions_to_ask": [
+      "What do you think this spot is?",
+      "Do I need a biopsy?",
+      "How soon should I be seen?",
+      "What signs should I watch for in the meantime?",
+      "Should I check my other moles too?"
+    ],
+    "flesch_kincaid_grade": 7.2,
+    "disclaimer": "IMPORTANT: This report is generated by an AI assistant and is for informational purposes only. It is NOT a medical diagnosis. Please discuss these findings with your healthcare provider."
+  },
+  "pipeline_metrics": {
+    "visual_analysis_time_s": 4.2,
+    "clinical_reasoning_time_s": 6.8,
+    "patient_report_time_s": 5.1,
+    "total_time_s": 16.1,
+    "vram_used_mb": 6842
+  }
+}

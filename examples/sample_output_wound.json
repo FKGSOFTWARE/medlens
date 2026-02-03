@@ -1,0 +1,68 @@
+{
+  "case": "Chronic wound assessment — diabetic foot ulcer",
+  "patient_context": {
+    "age": "67",
+    "sex": "Female",
+    "chief_complaint": "Non-healing wound on right foot",
+    "history_of_present_illness": "Patient presents with a wound on the plantar surface of the right foot that has been present for approximately 4 weeks. The wound was initially small but has gradually enlarged. Reports mild pain with walking. Denies fever, chills, or drainage with odor.",
+    "past_medical_history": "Type 2 diabetes (15 years), peripheral neuropathy, hypertension, hyperlipidemia",
+    "medications": "Insulin glargine 30 units daily, Metformin 1000mg BID, Atorvastatin 40mg, Amlodipine 10mg",
+    "allergies": "Sulfonamides"
+  },
+  "agent_1_visual_findings": {
+    "description": "Oval-shaped ulcer on the plantar surface of the right foot, located beneath the first metatarsal head. The wound bed shows a mix of red granulation tissue and yellow fibrinous slough. Wound margins are well-defined with callused periwound skin. No visible undermining. Surrounding skin shows mild erythema extending approximately 1cm from wound edge.",
+    "morphology": ["oval ulcer", "shallow depth", "granulation tissue present", "fibrinous slough"],
+    "anatomical_location": "right foot, plantar surface, first metatarsal head",
+    "severity": "moderate",
+    "color_descriptors": ["red granulation", "yellow slough", "pale periwound", "mild erythema"],
+    "size_estimate": "approximately 2.5cm x 1.8cm, depth approximately 3mm",
+    "border_characteristics": "well-defined margins with callused periwound skin, no undermining or tunneling evident",
+    "additional_observations": ["no purulent drainage visible", "mild periwound erythema", "callus formation at wound edges", "no exposed bone or tendon"],
+    "confidence": 0.7
+  },
+  "agent_2_clinical_assessment": {
+    "subjective": "67-year-old female with 15-year history of type 2 diabetes and peripheral neuropathy presents with a 4-week non-healing plantar ulcer on the right foot. Wound has gradually enlarged despite patient's self-care. Reports mild pain with ambulation. Denies systemic symptoms of infection. Current diabetes management includes insulin and metformin.",
+    "objective": "Visual analysis reveals a 2.5cm x 1.8cm oval ulcer on the plantar right foot beneath the first metatarsal head, approximately 3mm deep. Wagner Grade 1 classification (superficial ulcer without penetration to deeper structures). Wound bed shows mixed granulation tissue (approximately 60%) and fibrinous slough (approximately 40%). Periwound erythema extending 1cm noted. No exposed bone, tendon, or purulent drainage. Callus formation at wound margins consistent with neuropathic etiology.",
+    "assessment": "Neuropathic diabetic foot ulcer, Wagner Grade 1, with early signs of local inflammation. The plantar location beneath the metatarsal head, callus formation, and history of peripheral neuropathy are consistent with pressure-related neuropathic ulceration. The mild periwound erythema may represent early cellulitis or reactive inflammation. The presence of both granulation tissue and slough indicates a wound in the inflammatory-to-proliferative healing phase requiring optimization.",
+    "plan": "1. Offloading: Total contact cast or removable cast walker to reduce pressure on the ulcer site. 2. Wound care: Sharp debridement of fibrinous slough, followed by moist wound dressings (hydrogel or foam). 3. Infection assessment: Obtain wound culture if erythema progresses; consider empiric antibiotics if cellulitis suspected. 4. Vascular assessment: Ankle-brachial index (ABI) to rule out peripheral arterial disease contributing to delayed healing. 5. Glycemic optimization: Review HbA1c, target <7% for improved wound healing. 6. Follow-up: Weekly wound measurements and reassessment. 7. Podiatry referral for callus management and orthotic fitting.",
+    "differential_diagnosis": [
+      "neuropathic diabetic foot ulcer (Wagner Grade 1)",
+      "ischemic ulcer with neuropathic component",
+      "pressure ulcer",
+      "traumatic ulcer with delayed healing"
+    ],
+    "recommended_workup": [
+      "ankle-brachial index (ABI)",
+      "HbA1c",
+      "wound culture (if infection suspected)",
+      "basic metabolic panel",
+      "serum albumin (nutritional status)",
+      "plain radiograph of foot (to rule out osteomyelitis if not improving)"
+    ],
+    "urgency": "urgent",
+    "confidence": 0.7
+  },
+  "agent_3_patient_report": {
+    "summary": "We looked at the wound on the bottom of your right foot. It appears to be a type of sore that can happen when you have diabetes. It needs regular care and follow-up, but there are good steps you and your doctor can take to help it heal.",
+    "what_we_found": "The sore on the bottom of your foot is about the size of a large coin (2.5cm). It has some healthy healing tissue (the red parts) and some tissue that needs to be cleaned (the yellow parts). The skin around the wound is slightly red, which we are watching closely. There are no signs of a deep infection. The hard skin (callus) around the edges tells us that pressure on this area may be part of the problem.",
+    "what_it_might_mean": "This type of wound is common in people who have had diabetes for a long time, especially if you have reduced feeling in your feet (neuropathy). The reduced feeling means you may not notice pressure or small injuries, which can lead to sores like this. The good news is that the wound shows some healing, but it needs help to heal all the way.",
+    "next_steps": "Your doctor will likely recommend: a special boot or cast to take pressure off the wound while you walk; regular wound cleaning and bandage changes; blood tests to check your blood sugar control and nutrition; a test on your ankle to make sure blood flow to your foot is good. It is important to keep all follow-up appointments — these wounds need regular monitoring to heal properly.",
+    "questions_to_ask": [
+      "What type of boot or shoe should I wear to protect this wound?",
+      "How often should the wound dressing be changed?",
+      "Are there signs of infection I should watch for?",
+      "Do I need to change my diabetes medications?",
+      "When should I come back for a follow-up visit?",
+      "Should I see a foot specialist (podiatrist)?"
+    ],
+    "flesch_kincaid_grade": 7.8,
+    "disclaimer": "IMPORTANT: This report is generated by an AI assistant and is for informational purposes only. It is NOT a medical diagnosis. Please discuss these findings with your healthcare provider."
+  },
+  "pipeline_metrics": {
+    "visual_analysis_time_s": 4.5,
+    "clinical_reasoning_time_s": 7.2,
+    "patient_report_time_s": 5.4,
+    "total_time_s": 17.1,
+    "vram_used_mb": 6842
+  }
+}

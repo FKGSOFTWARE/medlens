@@ -13,10 +13,10 @@ via bitsandbytes to fit on 16GB VRAM.
 
 1. [x] Project scaffolding (data structures, config, scripts, tests)
 2. [x] Implement MedGemmaModel (model.py) — load, generate_multimodal, generate_text, from_yaml
-3. [ ] Implement VisualAnalysisAgent.run() — image → structured findings
-4. [ ] Implement ClinicalReasoningAgent.run() — findings + context → SOAP note
-5. [ ] Implement PatientReportAgent.run() — clinical output → patient report
-6. [ ] Implement Streamlit app (app.py) — full UI with image upload, context form, pipeline display
+3. [x] Implement VisualAnalysisAgent.run() — image → structured findings
+4. [x] Implement ClinicalReasoningAgent.run() — findings + context → SOAP note
+5. [x] Implement PatientReportAgent.run() — clinical output → patient report
+6. [x] Implement Streamlit app (app.py) — full UI with image upload, context form, pipeline display
 
 ## Files to Modify
 

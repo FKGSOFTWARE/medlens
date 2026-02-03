@@ -1,0 +1,41 @@
+[
+  {
+    "session_cost": 0.060216,
+    "usage_count": 4,
+    "timestamp": "2026-02-01T12:12:00.772277",
+    "details": [
+      {
+        "timestamp": 1769946832.8371034,
+        "model": "sonnet",
+        "prompt_tokens": 3078,
+        "response_tokens": 244,
+        "cached_tokens": 0,
+        "cost": 0.012894
+      },
+      {
+        "timestamp": 1769947247.9480922,
+        "model": "sonnet",
+        "prompt_tokens": 3080,
+        "response_tokens": 460,
+        "cached_tokens": 0,
+        "cost": 0.01614
+      },
+      {
+        "timestamp": 1769947640.6810856,
+        "model": "sonnet",
+        "prompt_tokens": 3079,
+        "response_tokens": 434,
+        "cached_tokens": 0,
+        "cost": 0.015747
+      },
+      {
+        "timestamp": 1769947918.1864984,
+        "model": "sonnet",
+        "prompt_tokens": 3085,
+        "response_tokens": 412,
+        "cached_tokens": 0,
+        "cost": 0.015435
+      }
+    ]
+  }
+]

@@ -10,13 +10,18 @@ Output: PatientReport dataclass with plain-language summary
 
 from __future__ import annotations
 
+import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from medlens.agents.parsing import extract_list, extract_section
 
 if TYPE_CHECKING:
     from medlens.agents.reasoning import ClinicalAssessment
     from medlens.model import MedGemmaModel
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -27,7 +32,7 @@ class PatientReport:
     what_we_found: str = ""
     what_it_might_mean: str = ""
     next_steps: str = ""
-    questions_to_ask: list[str] = None
+    questions_to_ask: list[str] = field(default_factory=list)
     flesch_kincaid_grade: float = 0.0
     raw_output: str = ""
     disclaimer: str = (
@@ -35,10 +40,6 @@ class PatientReport:
         "informational purposes only. It is NOT a medical diagnosis. Please "
         "discuss these findings with your healthcare provider."
     )
-
-    def __post_init__(self):
-        if self.questions_to_ask is None:
-            self.questions_to_ask = []
 
 
 def compute_flesch_kincaid_grade(text: str) -> float:
@@ -84,6 +85,22 @@ class PatientReportAgent:
         "parentheses. Be reassuring but honest."
     )
 
+    USER_PROMPT_TEMPLATE = (
+        "Convert the following clinical assessment into a patient-friendly report. "
+        "Use simple, everyday language. Structure your response with exactly these "
+        "section headers:\n\n"
+        "SUMMARY: <a brief 1-2 sentence overview in plain language>\n"
+        "WHAT WE FOUND: <describe the findings in simple terms>\n"
+        "WHAT IT MIGHT MEAN: <explain the possible meanings without causing alarm>\n"
+        "NEXT STEPS: <what the patient should do next>\n"
+        "QUESTIONS TO ASK YOUR DOCTOR: <comma-separated list of suggested questions>\n\n"
+        "--- CLINICAL ASSESSMENT ---\n{assessment}"
+    )
+
+    # Agent-specific generation config (from model_config.yaml agents.report)
+    MAX_NEW_TOKENS = 768
+    TEMPERATURE = 0.4
+
     def __init__(self, model: MedGemmaModel) -> None:
         self.model = model
 
@@ -96,4 +113,82 @@ class PatientReportAgent:
         Returns:
             PatientReport with plain-language content and FK score.
         """
-        raise NotImplementedError("Patient report agent not yet implemented")
+        prompt = self._build_prompt(assessment)
+
+        logger.info("Running patient report agent")
+        raw_output = self.model.generate_text(
+            prompt=prompt,
+            system_prompt=self.SYSTEM_PROMPT,
+            max_new_tokens=self.MAX_NEW_TOKENS,
+            temperature=self.TEMPERATURE,
+        )
+        logger.debug("Report agent raw output: %s", raw_output)
+
+        return self._parse_output(raw_output)
+
+    def _build_prompt(self, assessment: ClinicalAssessment) -> str:
+        """Build the user prompt from a clinical assessment."""
+        assessment_text = self._format_assessment(assessment)
+        return self.USER_PROMPT_TEMPLATE.format(assessment=assessment_text)
+
+    @staticmethod
+    def _format_assessment(assessment: ClinicalAssessment) -> str:
+        """Format ClinicalAssessment into a readable text block for the prompt."""
+        parts: list[str] = []
+        if assessment.subjective:
+            parts.append(f"Subjective: {assessment.subjective}")
+        if assessment.objective:
+            parts.append(f"Objective: {assessment.objective}")
+        if assessment.assessment:
+            parts.append(f"Assessment: {assessment.assessment}")
+        if assessment.plan:
+            parts.append(f"Plan: {assessment.plan}")
+        if assessment.differential_diagnosis:
+            parts.append(
+                f"Differential diagnosis: {', '.join(assessment.differential_diagnosis)}"
+            )
+        if assessment.recommended_workup:
+            parts.append(
+                f"Recommended workup: {', '.join(assessment.recommended_workup)}"
+            )
+        if assessment.urgency:
+            parts.append(f"Urgency: {assessment.urgency}")
+        return "\n".join(parts) if parts else "No clinical assessment available."
+
+    @staticmethod
+    def _parse_output(raw_output: str) -> PatientReport:
+        """Parse LLM output into structured PatientReport.
+
+        Uses section-header regex matching with fallback to treating the
+        entire output as the summary field if structured parsing fails.
+        """
+        report = PatientReport(raw_output=raw_output)
+
+        report.summary = extract_section(raw_output, "SUMMARY")
+        report.what_we_found = extract_section(raw_output, "WHAT WE FOUND")
+        report.what_it_might_mean = extract_section(
+            raw_output, "WHAT IT MIGHT MEAN"
+        )
+        report.next_steps = extract_section(raw_output, "NEXT STEPS")
+        report.questions_to_ask = extract_list(
+            raw_output, "QUESTIONS TO ASK YOUR DOCTOR"
+        )
+
+        # Fallback: if no sections were parsed, use full output as summary
+        if not any([report.summary, report.what_we_found,
+                     report.what_it_might_mean, report.next_steps]) and raw_output.strip():
+            report.summary = raw_output.strip()
+
+        # Compute readability score on the combined text content
+        combined_text = " ".join(
+            part for part in [
+                report.summary,
+                report.what_we_found,
+                report.what_it_might_mean,
+                report.next_steps,
+            ] if part
+        )
+        if combined_text:
+            report.flesch_kincaid_grade = compute_flesch_kincaid_grade(combined_text)
+
+        return report

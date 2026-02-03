@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
@@ -46,8 +46,8 @@ class MedGemmaModel:
 
     def __init__(self, config: ModelConfig | None = None) -> None:
         self.config = config or ModelConfig()
-        self._model = None
-        self._processor = None
+        self._model: Any = None
+        self._processor: Any = None
         self._loaded = False
 
     @property
@@ -98,6 +98,11 @@ class MedGemmaModel:
         self._loaded = True
         logger.info("MedGemma model loaded successfully")
 
+    def _ensure_loaded(self) -> None:
+        """Verify model and processor are loaded, raise if not."""
+        if not self._loaded or self._model is None or self._processor is None:
+            raise RuntimeError("Model not loaded. Call load() first.")
+
     def generate_multimodal(
         self, image: Image.Image, prompt: str, system_prompt: str = "",
         max_new_tokens: int | None = None, temperature: float | None = None,
@@ -114,12 +119,11 @@ class MedGemmaModel:
         Returns:
             Generated text response.
         """
-        if not self._loaded:
-            raise RuntimeError("Model not loaded. Call load() first.")
+        self._ensure_loaded()
 
         import torch
 
-        messages = []
+        messages: list[dict[str, Any]] = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
 
@@ -163,12 +167,11 @@ class MedGemmaModel:
         Returns:
             Generated text response.
         """
-        if not self._loaded:
-            raise RuntimeError("Model not loaded. Call load() first.")
+        self._ensure_loaded()
 
         import torch
 
-        messages = []
+        messages: list[dict[str, Any]] = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
@@ -191,11 +194,14 @@ class MedGemmaModel:
 
     def _generation_kwargs(
         self, max_new_tokens: int | None, temperature: float | None,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Build generation kwargs from config + overrides."""
         temp = temperature if temperature is not None else self.config.temperature
-        kwargs = {
-            "max_new_tokens": max_new_tokens or self.config.max_new_tokens,
+        kwargs: dict[str, Any] = {
+            "max_new_tokens": (
+                max_new_tokens if max_new_tokens is not None
+                else self.config.max_new_tokens
+            ),
             "top_p": self.config.top_p,
             "do_sample": temp > 0,
         }

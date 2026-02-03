@@ -1,11 +1,31 @@
 {
   "2026-02-01": {
     "date": "2026-02-01",
+    "tasks_attempted": 5,
+    "tasks_succeeded": 5,
+    "tasks_failed": 0,
+    "total_iterations": 19,
+    "first_attempt_successes": 1,
+    "patterns_matched": 0,
+    "patterns_used": 0,
+    "categories": {
+      "feature": {
+        "attempted": 4,
+        "succeeded": 4
+      },
+      "frontend_component": {
+        "attempted": 1,
+        "succeeded": 1
+      }
+    }
+  },
+  "2026-02-03": {
+    "date": "2026-02-03",
     "tasks_attempted": 1,
     "tasks_succeeded": 1,
     "tasks_failed": 0,
-    "total_iterations": 1,
-    "first_attempt_successes": 1,
+    "total_iterations": 7,
+    "first_attempt_successes": 0,
     "patterns_matched": 0,
     "patterns_used": 0,
     "categories": {

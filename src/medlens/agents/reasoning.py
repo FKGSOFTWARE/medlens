@@ -10,12 +10,22 @@ Output: ClinicalAssessment dataclass with SOAP note and differentials
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from medlens.agents.parsing import (
+    extract_list,
+    extract_section,
+    parse_confidence,
+    parse_urgency,
+)
 
 if TYPE_CHECKING:
     from medlens.agents.visual import VisualFindings
     from medlens.model import MedGemmaModel
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -77,6 +87,25 @@ class ClinicalReasoningAgent:
         "This is for clinical decision support only — not a definitive diagnosis."
     )
 
+    USER_PROMPT_TEMPLATE = (
+        "Based on the following visual findings and patient context, provide a "
+        "structured clinical assessment. Use exactly these section headers:\n\n"
+        "SUBJECTIVE: <patient-reported symptoms and history>\n"
+        "OBJECTIVE: <visual findings and clinical observations>\n"
+        "ASSESSMENT: <clinical interpretation and primary impression>\n"
+        "PLAN: <recommended next steps and management>\n"
+        "DIFFERENTIAL DIAGNOSIS: <comma-separated list ranked by likelihood>\n"
+        "RECOMMENDED WORKUP: <comma-separated list of tests/procedures>\n"
+        "URGENCY: <routine, urgent, or emergent>\n"
+        "CONFIDENCE: <high, moderate, or low>\n\n"
+        "--- VISUAL FINDINGS ---\n{findings}\n\n"
+        "--- PATIENT CONTEXT ---\n{context}"
+    )
+
+    # Agent-specific generation config (from model_config.yaml agents.reasoning)
+    MAX_NEW_TOKENS = 1024
+    TEMPERATURE = 0.3
+
     def __init__(self, model: MedGemmaModel) -> None:
         self.model = model
 
@@ -92,4 +121,106 @@ class ClinicalReasoningAgent:
         Returns:
             ClinicalAssessment with SOAP note and differentials.
         """
-        raise NotImplementedError("Clinical reasoning agent not yet implemented")
+        prompt = self._build_prompt(findings, context)
+
+        logger.info("Running clinical reasoning agent")
+        raw_output = self.model.generate_text(
+            prompt=prompt,
+            system_prompt=self.SYSTEM_PROMPT,
+            max_new_tokens=self.MAX_NEW_TOKENS,
+            temperature=self.TEMPERATURE,
+        )
+        logger.debug("Reasoning agent raw output: %s", raw_output)
+
+        return self._parse_output(raw_output)
+
+    def _build_prompt(
+        self, findings: VisualFindings, context: PatientContext
+    ) -> str:
+        """Build the user prompt from visual findings and patient context."""
+        findings_text = self._format_findings(findings)
+        context_text = self._format_context(context)
+        return self.USER_PROMPT_TEMPLATE.format(
+            findings=findings_text, context=context_text
+        )
+
+    @staticmethod
+    def _format_findings(findings: VisualFindings) -> str:
+        """Format VisualFindings into a readable text block."""
+        parts: list[str] = []
+        if findings.description:
+            parts.append(f"Description: {findings.description}")
+        if findings.morphology:
+            parts.append(f"Morphology: {', '.join(findings.morphology)}")
+        if findings.anatomical_location:
+            parts.append(f"Anatomical location: {findings.anatomical_location}")
+        if findings.severity:
+            parts.append(f"Severity: {findings.severity}")
+        if findings.color_descriptors:
+            parts.append(f"Color: {', '.join(findings.color_descriptors)}")
+        if findings.size_estimate:
+            parts.append(f"Size: {findings.size_estimate}")
+        if findings.border_characteristics:
+            parts.append(f"Borders: {findings.border_characteristics}")
+        if findings.additional_observations:
+            parts.append(
+                f"Additional: {', '.join(findings.additional_observations)}"
+            )
+        if findings.confidence > 0:
+            parts.append(f"Visual confidence: {findings.confidence:.1f}")
+        return "\n".join(parts) if parts else "No visual findings available."
+
+    @staticmethod
+    def _format_context(context: PatientContext) -> str:
+        """Format PatientContext into a readable text block."""
+        parts: list[str] = []
+        if context.age:
+            parts.append(f"Age: {context.age}")
+        if context.sex:
+            parts.append(f"Sex: {context.sex}")
+        if context.chief_complaint:
+            parts.append(f"Chief complaint: {context.chief_complaint}")
+        if context.history_of_present_illness:
+            parts.append(f"HPI: {context.history_of_present_illness}")
+        if context.past_medical_history:
+            parts.append(f"PMH: {context.past_medical_history}")
+        if context.medications:
+            parts.append(f"Medications: {context.medications}")
+        if context.allergies:
+            parts.append(f"Allergies: {context.allergies}")
+        if context.additional_notes:
+            parts.append(f"Notes: {context.additional_notes}")
+        return "\n".join(parts) if parts else "No patient context provided."
+
+    @staticmethod
+    def _parse_output(raw_output: str) -> ClinicalAssessment:
+        """Parse LLM output into structured ClinicalAssessment.
+
+        Uses section-header regex matching with fallback to treating the
+        entire output as the assessment field if structured parsing fails.
+        """
+        result = ClinicalAssessment(raw_output=raw_output)
+
+        result.subjective = extract_section(raw_output, "SUBJECTIVE")
+        result.objective = extract_section(raw_output, "OBJECTIVE")
+        result.assessment = extract_section(raw_output, "ASSESSMENT")
+        result.plan = extract_section(raw_output, "PLAN")
+        result.differential_diagnosis = extract_list(
+            raw_output, "DIFFERENTIAL DIAGNOSIS"
+        )
+        result.recommended_workup = extract_list(
+            raw_output, "RECOMMENDED WORKUP"
+        )
+        result.urgency = parse_urgency(
+            extract_section(raw_output, "URGENCY")
+        )
+        result.confidence = parse_confidence(
+            extract_section(raw_output, "CONFIDENCE")
+        )
+
+        # Fallback: if no SOAP sections were parsed, use full output as assessment
+        if not any([result.subjective, result.objective,
+                     result.assessment, result.plan]) and raw_output.strip():
+            result.assessment = raw_output.strip()
+
+        return result

@@ -7,17 +7,17 @@ structured clinical assessments and patient-friendly reports, for submission
 to the MedGemma Impact Challenge (deadline: Feb 24, 2026).
 
 ## Success Criteria
-- [ ] MedGemma 4B loads quantized (4-bit) and runs inference on RTX 4070 Ti Super (16GB)
-- [ ] Visual Analysis Agent: Takes image → produces structured findings JSON
-- [ ] Clinical Reasoning Agent: Takes findings + context → produces SOAP note
-- [ ] Patient Report Agent: Takes clinical output → produces plain-language summary
-- [ ] Orchestrator chains all 3 agents with observable intermediate outputs
-- [ ] Streamlit app: Upload image + enter notes → see agent chain → get outputs
-- [ ] Latency < 30s total for full 3-agent pipeline
-- [ ] Patient report scores Flesch-Kincaid grade level 6-8
-- [ ] All code in public GitHub repo
-- [ ] 3-minute demo video recorded
-- [ ] 3-page writeup completed per competition template
+- [~] MedGemma 4B loads quantized (4-bit) and runs inference on RTX 4070 Ti Super (16GB) — CODE READY, needs GPU test
+- [x] Visual Analysis Agent: Takes image → produces structured findings JSON
+- [x] Clinical Reasoning Agent: Takes findings + context → produces SOAP note
+- [x] Patient Report Agent: Takes clinical output → produces plain-language summary
+- [x] Orchestrator chains all 3 agents with observable intermediate outputs
+- [x] Streamlit app: Upload image + enter notes → see agent chain → get outputs
+- [~] Latency < 30s total for full 3-agent pipeline — needs GPU test (estimated ~16s)
+- [x] Patient report scores Flesch-Kincaid grade level 6-8 — FK computation implemented
+- [ ] All code in public GitHub repo — see docs/github_setup.md
+- [ ] 3-minute demo video recorded — see docs/demo_script.md
+- [x] 3-page writeup completed per competition template — see docs/writeup_template.md
 - [ ] Submitted to Kaggle as Writeup before Feb 24 11:59 PM UTC
 
 ## Scope

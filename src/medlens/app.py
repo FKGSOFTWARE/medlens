@@ -3,11 +3,16 @@
 Provides a web interface for uploading clinical images, entering patient
 context, and viewing the 3-agent pipeline results including intermediate
 outputs at each stage.
+
+Supports DEMO_MODE environment variable to show sample outputs without GPU.
 """
 
 from __future__ import annotations
 
+import json
 import logging
+import os
+import time
 
 import streamlit as st
 from PIL import Image
@@ -19,6 +24,9 @@ from medlens.model import MedGemmaModel, ModelConfig
 from medlens.orchestrator import MedLensOrchestrator, PipelineResult
 
 logger = logging.getLogger(__name__)
+
+# Demo mode: set DEMO_MODE=1 to use sample outputs without loading the model
+DEMO_MODE = os.environ.get("DEMO_MODE", "0") == "1"
 
 # --- Page configuration ---
 
@@ -39,6 +47,7 @@ DISCLAIMER_TEXT = (
 )
 
 CONFIG_PATH = "configs/model_config.yaml"
+SAMPLE_OUTPUT_PATH = "examples/sample_output_dermatology.json"
 
 
 # --- Model loading (cached) ---
@@ -53,6 +62,65 @@ def load_model() -> MedGemmaModel:
         model = MedGemmaModel(ModelConfig())
     model.load()
     return model
+
+
+def load_demo_result() -> PipelineResult:
+    """Load sample output for demo mode."""
+    with open(SAMPLE_OUTPUT_PATH) as f:
+        data = json.load(f)
+
+    findings_data = data["agent_1_visual_findings"]
+    assessment_data = data["agent_2_clinical_assessment"]
+    report_data = data["agent_3_patient_report"]
+    metrics = data["pipeline_metrics"]
+
+    visual_findings = VisualFindings(
+        description=findings_data["description"],
+        morphology=findings_data["morphology"],
+        anatomical_location=findings_data["anatomical_location"],
+        severity=findings_data["severity"],
+        color_descriptors=findings_data["color_descriptors"],
+        size_estimate=findings_data["size_estimate"],
+        border_characteristics=findings_data["border_characteristics"],
+        additional_observations=findings_data["additional_observations"],
+        confidence=findings_data["confidence"],
+        raw_output="[Demo mode — sample output]",
+    )
+
+    clinical_assessment = ClinicalAssessment(
+        subjective=assessment_data["subjective"],
+        objective=assessment_data["objective"],
+        assessment=assessment_data["assessment"],
+        plan=assessment_data["plan"],
+        differential_diagnosis=assessment_data["differential_diagnosis"],
+        recommended_workup=assessment_data["recommended_workup"],
+        urgency=assessment_data["urgency"],
+        confidence=assessment_data["confidence"],
+        raw_output="[Demo mode — sample output]",
+    )
+
+    patient_report = PatientReport(
+        summary=report_data["summary"],
+        what_we_found=report_data["what_we_found"],
+        what_it_might_mean=report_data["what_it_might_mean"],
+        next_steps=report_data["next_steps"],
+        questions_to_ask=report_data["questions_to_ask"],
+        flesch_kincaid_grade=report_data["flesch_kincaid_grade"],
+        raw_output="[Demo mode — sample output]",
+    )
+
+    return PipelineResult(
+        visual_findings=visual_findings,
+        clinical_assessment=clinical_assessment,
+        patient_report=patient_report,
+        timings={
+            "visual_analysis": metrics["visual_analysis_time_s"],
+            "clinical_reasoning": metrics["clinical_reasoning_time_s"],
+            "patient_report": metrics["patient_report_time_s"],
+        },
+        total_time=metrics["total_time_s"],
+        success=True,
+    )
 
 
 # --- Helper functions ---
@@ -223,6 +291,9 @@ def main() -> None:
         "**3-Agent Clinical Image Analysis** — Powered by MedGemma 4B"
     )
 
+    if DEMO_MODE:
+        st.info("**Demo Mode**: Using sample outputs. Set `DEMO_MODE=0` to use real model.")
+
     render_disclaimer()
 
     # --- Sidebar: Patient context form ---
@@ -267,26 +338,38 @@ def main() -> None:
     if analyze_clicked and uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
 
-        # Load model and create orchestrator
-        with st.spinner("Loading model..."):
-            model = load_model()
-        orchestrator = MedLensOrchestrator(model)
+        if DEMO_MODE:
+            # Demo mode: simulate pipeline with sample outputs
+            progress_bar = st.progress(0, text="Starting pipeline...")
+            progress_bar.progress(10, text="Agent 1: Analyzing image...")
+            time.sleep(0.5)
+            progress_bar.progress(40, text="Agent 2: Clinical reasoning...")
+            time.sleep(0.5)
+            progress_bar.progress(70, text="Agent 3: Generating patient report...")
+            time.sleep(0.5)
+            progress_bar.progress(100, text="Complete!")
+            result = load_demo_result()
+        else:
+            # Real mode: Load model and run pipeline
+            with st.spinner("Loading model..."):
+                model = load_model()
+            orchestrator = MedLensOrchestrator(model)
 
-        # Run pipeline with progress display via callback
-        progress_bar = st.progress(0, text="Starting pipeline...")
+            # Run pipeline with progress display via callback
+            progress_bar = st.progress(0, text="Starting pipeline...")
 
-        def on_progress(stage: str, fraction: float, message: str) -> None:
-            progress_bar.progress(int(fraction * 100), text=message)
+            def on_progress(stage: str, fraction: float, message: str) -> None:
+                progress_bar.progress(int(fraction * 100), text=message)
 
-        result = orchestrator.run(
-            image=image,
-            patient_context=patient_context,
-            clinical_context=clinical_context,
-            on_progress=on_progress,
-        )
+            result = orchestrator.run(
+                image=image,
+                patient_context=patient_context,
+                clinical_context=clinical_context,
+                on_progress=on_progress,
+            )
 
-        if not result.success:
-            logger.exception("Pipeline error: %s", result.error)
+            if not result.success:
+                logger.exception("Pipeline error: %s", result.error)
 
         # --- Display results ---
         if result.success:

@@ -16,7 +16,7 @@
 - [x] Create public GitHub repo — https://github.com/FKGSOFTWARE/medlens
 - [x] Push all code
 - [x] Update repo links in writeup and README
-- [ ] Verify README renders correctly
+- [x] Verify README renders correctly
 
 ### Demo Video (max 3 minutes)
 - [ ] Record following `docs/demo_script.md`
